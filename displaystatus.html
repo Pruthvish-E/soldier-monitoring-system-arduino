@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MySoldier</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHrd6CYT4VhweZQFMBYe3M2V-5Ur3Lu8c&callback=initMap" async defer></script>
+    <script>
+        function getStatus(){
+           var xhttp=new XMLHttpRequest();
+           xhttp.onreadystatechange=function() {
+            if(this.readyState==4&&this.status==200){
+                var str=this.responseText;
+                var arr=str.split(" ");
+                document.querySelector("#temp").innerHTML=arr[0];
+                document.querySelector("#pulse").innerHTML=arr[1];
+                document.querySelector("#msg").innerHTML=arr[arr.length-1];
+                document.querySelector("#loc").innerHTML=arr[2]+" "+arr[3];
+                initMap(Number(arr[2]),Number(arr[3]));
+            }
+           }
+           xhttp.open("POST","soldierStatus.php",true);
+           xhttp.send();
+        }
+        window.onload=(getStatus,1000);
+    </script>
+    <style>
+          #map {
+        height: 425px;
+      }
+      </style>
+</head>
+<body>
+    <div class = "jumbotron">Soldier#1</div><br>
+    
+    <a href="#"  type="button" class="btn btn-secondary btn-lg" >Temperature</a>
+    <div id = "temperature" class ="alert alert-info" role="alert">
+        <h6 class = "alert-heading" id="temp">Temperature</h6>
+    </div> <br>
+   
+    <a href="#" type="button" class="btn btn-secondary btn-lg" >Pulse</a>
+    <div id = "pulse" class ="alert alert-info" role="alert">
+        <h6 class = "alert-heading" is="pulse">Pulse Rate</h6>
+    </div><br>
+    
+    <a href="#" type="button" class="btn btn-secondary btn-lg" >Message</a>
+    <div id = "force" class ="alert alert-info" role="alert">
+        <h6 class = "alert-heading" id="msg">Message</h6>
+    </div><br>
+    
+    <a href="#" type="button" class="btn btn-secondary btn-lg" >Location Coordinates </a>
+    <div id = "location" class ="alert alert-info" role="alert">
+        <h6 class = "alert-heading" id="loc"></h6>
+    </div>
+    <div id="map"></div>
+    <script>
+      var map;
+      function initMap(lat1,lng1) {
+        myLatLng={lat: lat1, lng: lng1};
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: myLatLng,
+          zoom: 8
+        });
+        var marker = new google.maps.Marker({
+    position: myLatLng,
+    map: map,
+    title: 'View Position of the soldier'
+  });
+      }
+    </script>
+</body>
+</html>
